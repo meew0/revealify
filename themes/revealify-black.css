@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Benne&display=swap');
+            
+#slides section {
+    font-size: 24pt;
+    font-family: 'Benne', serif;
+}
+
+.reveal-viewport {
+    background-color: #000;
+    color: #fff;
+}
+
+.reveal .controls {
+    color: #fff;
+}

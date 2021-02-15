@@ -9,9 +9,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
         
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Benne&display=swap" rel="stylesheet"> 
-        
+        <link rel="preconnect" href="https://fonts.gstatic.com">     
         <style>
             body {
                 background-color: #f3f3f3;
@@ -20,7 +18,6 @@
                 margin-left: max(10px,30vw - 200px);
                 margin-right: 10px;
                 width: min(90vw, 20vw + 800px);
-                font-family: 'Benne', serif;
             }
             
             #form h1 { font-weight: bold; font-size: 16pt; margin-top: 1.5em; }
@@ -47,11 +44,6 @@
             #form .wide {
                 width: 98%;
             }
-            
-            #slides section {
-                font-size: 24pt;
-                font-family: 'Benne', serif;
-            }
         </style>
     </head>
     <body>
@@ -67,6 +59,22 @@
             <br>
             <input type="checkbox" name="removeempty" id="removeempty" checked></input>
             <label for="removeempty">Remove empty lines</label>
+            <br>
+            <label for="themeselect">Theme:</label>
+            <select name="themeselect" id="themeselect">
+                <option value="themes/revealify-light.css">revealify-light</option>
+                <option value="themes/revealify-dark.css">revealify-dark</option>
+                <option value="themes/revealify-black.css">revealify-black</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/beige.css">Beige</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/black.css">Black</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/blood.css">Blood</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/league.css">League</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/moon.css">Moon</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/night.css">Night</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/serif.css">Serif</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css">Simple</option>
+                <option value="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/sky.css">Sky</option>
+            </select>
             <br>
             <button onclick="submit()">Submit!</button>
         </div>
@@ -109,6 +117,8 @@
             function initReveal(lines) {
                 var progress = document.getElementById("progress"),
                     slides = document.getElementById("slides");
+                
+                setTheme(document.getElementById("themeselect").value);
                     
                 if(document.getElementById("removeempty").checked) {
                     lines = lines.filter(Boolean);
@@ -128,6 +138,17 @@
                     progress: progress.checked,
                     transitionSpeed: 'fast'
                 });
+            }
+            
+            function setTheme(theme) {
+                var head = document.head;
+                var link = document.createElement("link");
+
+                link.type = "text/css";
+                link.rel = "stylesheet";
+                link.href = theme;
+
+                head.appendChild(link);
             }
         </script>
     </body>
