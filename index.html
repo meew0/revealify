@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>reveal.js</title>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Benne&display=swap" rel="stylesheet"> 
+        
+        <style>
+            body {
+                background-color: #f3f3f3;
+            }
+            #form {
+                margin-left: max(10px,30vw - 200px);
+                margin-right: 10px;
+                width: min(90vw, 20vw + 800px);
+                font-family: 'Benne', serif;
+            }
+            
+            #form h1 { font-weight: bold; font-size: 16pt; margin-top: 1.5em; }
+            #form h2 { font-weight: bold; font-size: 12pt; margin-top: 1em; }
+            
+            #form textarea {
+                height: 50vh;
+            }
+            
+            #form textarea, #form .textinput {
+                border: 1px solid #000;
+                border-radius: 0.5em;
+                padding: 0.5em;
+                outline: none;
+                background-color: #fff;
+            }
+            #form textarea:focus, #form .textinput:focus {
+                box-shadow: 0px 0px 3px #5bf;
+            }
+            
+            #form textarea[disabled], #form .textinput[disabled] {
+                background-color: #f3f3f3;
+            }
+            #form .wide {
+                width: 98%;
+            }
+            
+            #slides section {
+                font-size: 24pt;
+                font-family: 'Benne', serif;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="form">
+            <h1>Turn some text into an ad-hoc reveal.js slideshow</h1>
+            <h2>Enter some text here:</h2>
+            <textarea id="textarea" class="wide" oninput="disableInputs()"></textarea>
+            <h2>Or enter a URL:</h2>
+            <input class="wide textinput" type="url" id="urlinput" oninput="disableInputs()"></input>
+            <br>
+            <input type="checkbox" name="progress" id="progress"></input>
+            <label for="progress">Enable progress bar at the bottom</label>
+            <br>
+            <input type="checkbox" name="removeempty" id="removeempty" checked></input>
+            <label for="removeempty">Remove empty lines</label>
+            <br>
+            <button onclick="submit()">Submit!</button>
+        </div>
+        <div class="reveal">
+            <div class="slides" id="slides">
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.min.js"></script>
+        <script>
+            function disableInputs() {
+                var textarea = document.getElementById("textarea"), urlinput = document.getElementById("urlinput");
+                if(textarea.value != "") urlinput.disabled = true;
+                else if(urlinput.value != "") textarea.disabled = true;
+                else {
+                    urlinput.disabled = false;
+                    textarea.disabled = false;
+                }
+            }
+            
+            function submit() {
+                var textarea = document.getElementById("textarea"),
+                    urlinput = document.getElementById("urlinput");
+                if(textarea.value != "") {
+                    initReveal(textarea.value.split("\n"));
+                } else if(urlinput.value != "") {
+                    var request = new XMLHttpRequest();
+                    request.addEventListener("load", function() {
+                        initReveal(this.responseText.split("\n"));
+                    });
+                    request.addEventListener("error", () => alert("Loading URL failed!"));
+                    request.addEventListener("abort", () => alert("Loading URL canceled"));
+                    request.open("GET", urlinput.value);
+                    request.send();
+                } else {
+                    alert("You must either enter some text or a URL");
+                }
+            }
+            
+            function initReveal(lines) {
+                var progress = document.getElementById("progress"),
+                    slides = document.getElementById("slides");
+                    
+                if(document.getElementById("removeempty").checked) {
+                    lines = lines.filter(Boolean);
+                }
+                
+                lines.forEach(line => {
+                    var element = document.createElement("section");
+                    element.innerText = line;
+                    slides.append(element);
+                });
+                
+                document.getElementById("form").remove();
+                
+                Reveal.initialize({
+                    hash: true,
+                    plugins: [],
+                    progress: progress.checked,
+                    transitionSpeed: 'fast'
+                });
+            }
+        </script>
+    </body>
+</html>
